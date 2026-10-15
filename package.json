@@ -1,0 +1,64 @@
+{
+  "name": "bosai-board",
+  "productName": "BoSai Board",
+  "version": "1.0.0",
+  "description": "博思白板 / Visio 风格的桌面白板与流程图工具",
+  "main": "electron/main.js",
+  "author": "WorkBuddy",
+  "license": "MIT",
+  "scripts": {
+    "dev": "concurrently -k \"vite\" \"wait-on tcp:5273 && node tools/dev.js\"",
+    "build": "vite build",
+    "typecheck": "tsc --noEmit",
+    "test": "node tools/run-tests.cjs",
+    "check": "npm run typecheck && node --check electron/main.js && node --check electron/preload.js && node --check electron/atomic-file.js && npm run build && npm test",
+    "start": "npm run build && electron .",
+    "dist": "npm run build && electron-builder --win --x64"
+  },
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "zustand": "^4.5.5"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "@vitejs/plugin-react": "^4.3.4",
+    "concurrently": "^9.1.0",
+    "electron": "^32.2.6",
+    "electron-builder": "^25.1.8",
+    "typescript": "^5.7.2",
+    "vite": "^5.4.11",
+    "wait-on": "^8.0.1"
+  },
+  "build": {
+    "appId": "com.workbuddy.bosaiboard",
+    "productName": "BoSai Board",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "dist/**/*",
+      "assets/**/*",
+      "electron/**/*",
+      "package.json"
+    ],
+    "win": {
+      "icon": "assets/icon.ico",
+      "target": [
+        { "target": "nsis", "arch": ["x64"] },
+        { "target": "portable", "arch": ["x64"] }
+      ],
+      "artifactName": "BoSaiBoard-${version}-${arch}.${ext}"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "shortcutName": "BoSai Board"
+    },
+    "portable": {
+      "artifactName": "BoSaiBoard-${version}-portable.exe"
+    }
+  }
+}
